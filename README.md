@@ -12,7 +12,7 @@ The web UI refuses to listen on anything but loopback and logs in with a one-tim
 
 Settings is usually disabled on any address other than localhost. The image patches that one check so the Models page works from your Railway domain, and the build fails if a new DSH version changes that code.
 
-After deploying, open the service's domain, sign in, and either set `DEEPSEEK_API_KEY` or save a key under Settings > Models. Without a key the UI opens but the agent can't answer. Model usage is billed by your provider, not by this template.
+After deploying, open the service's domain and sign in. Set `DEEPSEEK_API_KEY`, or save a key under Settings > Models from the account menu at the bottom left. Then choose **Add workspace**, pick the `workspace` folder, and start a session. Without a key the UI opens but the agent can't answer. Model usage is billed by your provider, not by this template.
 
 **The agent has full shell access to this container.** Anyone who has the password can run commands in it and read its variables, including `GH_TOKEN` and your API key. Use a long password and a token limited to the repos the agent should touch.
 
@@ -35,9 +35,10 @@ After deploying, open the service's domain, sign in, and either set `DEEPSEEK_AP
 
 ### Implementation Details
 
-- **Volume:** `/data` is the home directory. Sessions and settings live in `/data/.dsh`, and the agent starts in `/data/workspace`. Both survive redeploys.
+- **Volume:** `/data` is the home directory. Sessions and settings live in `/data/.dsh`, and `/data/workspace` is there for your projects. All of it survives redeploys, including files the agent wrote.
 - **Tools included:** git, git-lfs, `gh`, ripgrep, tmux, Python 3, Node.js 24 and build-essential. Packages the agent installs with `apt` go away on redeploy; anything under `/data` stays.
 - **Memory:** a real project with builds and tests needs more than the 0.5 GB of Railway's Free plan. The UI itself runs in that, but expect the agent's builds to be killed there.
+- **Other providers:** Settings > Models takes a custom Anthropic-compatible base URL and model names, or a provider from the built-in catalog under Add model provider.
 - **Version:** pinned to a tested release, and upstream is still publishing release candidates, so expect its interface to change between updates.
 
 ## Why Deploy DeepSeek Harness on Railway?
