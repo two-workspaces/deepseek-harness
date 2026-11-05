@@ -37,7 +37,7 @@ After deploying, open the service's domain and sign in. Set `DEEPSEEK_API_KEY`, 
 
 - **Volume:** `/data` is the home directory. Sessions and settings live in `/data/.dsh`, and `/data/workspace` is there for your projects. All of it survives redeploys, including files the agent wrote.
 - **Tools included:** git, git-lfs, `gh`, ripgrep, tmux, Python 3, Node.js 24 and build-essential. Packages the agent installs with `apt` go away on redeploy; anything under `/data` stays.
-- **Memory:** a real project with builds and tests needs more than the 0.5 GB of Railway's Free plan. The UI itself runs in that, but expect the agent's builds to be killed there.
+- **Memory:** plan on at least 1 GB. The UI idles at about 300 MB and runs on Railway's 0.5 GB Free limit, but in our test cloning a small Node project and running `npm install` there killed the whole service. It restarts by itself with your files and sessions intact, though the running turn is lost. The same job, including its test suite, finished on a 1 GB limit. Larger projects will need more.
 - **Other providers:** Settings > Models takes a custom Anthropic-compatible base URL and model names, or a provider from the built-in catalog under Add model provider.
 - **Version:** pinned to a tested release, and upstream is still publishing release candidates, so expect its interface to change between updates.
 
