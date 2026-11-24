@@ -25,12 +25,14 @@ RUN npm install -g "@deepseek-ai/dsh@${DSH_VERSION}" && npm cache clean --force
 # upgrade reshapes this line, rather than shipping an image with a dead Settings page.
 RUN F=/usr/local/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-client-connection/lib/client.browser.js \
   && python3 - "$F" <<'PY'
-import pathlib, sys
+import pathlib, re, sys
 f = pathlib.Path(sys.argv[1])
-gate = "isLoopback: transport?.ownsHost === true || pageLocation === void 0 || isLoopbackHostname(pageLocation.hostname)"
+# Spaced up to 0.2.2-rc.1, minified from rc.5: allow either.
+gate = re.compile(r"isLoopback:\s*transport\?\.ownsHost\s*===\s*true\s*\|\|\s*pageLocation\s*===\s*void 0\s*\|\|\s*isLoopbackHostname\(pageLocation\.hostname\)")
 text = f.read_text()
-assert text.count(gate) == 1, f"settings gate found {text.count(gate)} times"
-f.write_text(text.replace(gate, "isLoopback: true"))
+found = len(gate.findall(text))
+assert found == 1, f"settings gate found {found} times"
+f.write_text(gate.sub("isLoopback: true", text))
 PY
 
 COPY --chmod=0755 entrypoint.sh /usr/local/bin/entrypoint.sh
