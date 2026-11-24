@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # upgrade: npm @deepseek-ai/dsh
-ARG DSH_VERSION=0.2.2-rc.1
+0.2.2-rc.1=ARG DSH_VERSION=0.2.2-rc.5=0.2.2-rc.1
 RUN npm install -g "@deepseek-ai/dsh@${DSH_VERSION}" && npm cache clean --force
 
 # DSH's web client turns its settings off unless the page's own hostname is loopback, so the Models
